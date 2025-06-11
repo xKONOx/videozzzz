@@ -1,0 +1,56 @@
+name: Videzz Windows
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '18,48 * * * *'  # Chạy mỗi giờ vào phút 21 và 51
+
+jobs:
+  capture_screenshots:
+    strategy:
+      matrix:
+        runs-on: 
+          - windows-latest
+          - windows-latest
+          - windows-latest
+          - windows-latest
+          - windows-latest
+          - windows-latest
+          - windows-latest
+          - windows-latest
+          - windows-latest
+          - windows-latest
+          - windows-2019
+          - windows-2019
+          - windows-2019
+          - windows-2019
+          - windows-2019
+          - windows-2019
+          - windows-2019
+          - windows-2019
+          - windows-2019
+    runs-on: ${{ matrix.runs-on }}
+    continue-on-error: true
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+        
+      - name: Install dependencies
+        run: pip install undetected-chromedriver selenium chromedriver_autoinstaller pyautogui fake-useragent
+
+      - name: Run Selenium script
+        run: python videzz_video.py
+        
+      - name: Archive screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screenshots
+          path: '**/*.png'
